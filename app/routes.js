@@ -10,18 +10,25 @@ import { Dimensions } from 'react-native';
 const DrawerNavigator = createDrawerNavigator(
     {
         Content: {
-            screen: HomeScreen
+            screen: createStackNavigator({ HomeStack: { screen: HomeScreen } })
         }
     },
     {
+        headerMode: 'flex',
         contentComponent: Drawer,
         drawerWidth: Dimensions.get('window').width * 0.85
     });
 
-export const AppNavigator = createStackNavigator({
-    DrawerStack: {
-        screen: DrawerNavigator
+export const AppNavigator = createStackNavigator(
+    {
+        DrawerStack: {
+            screen: DrawerNavigator
+        }
+    },
+    {
+        mode: 'modal',
+        headerMode: 'none'
     }
-});
+);
 
 
