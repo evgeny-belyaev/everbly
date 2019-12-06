@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "654220485267",
+    "firebase_url": "https://everbly.firebaseio.com",
+    "project_id": "everbly",
+    "storage_bucket": "everbly.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:654220485267:android:7ded7a6b1e749f4ceba366",
+        "android_client_info": {
+          "package_name": "com.everbly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "654220485267-a6krnc5h4sev9s2a0ao33kir9mv97ad7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7fXdodHEoE43qJB2NIKnDHVTFVhV08Fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "654220485267-a6krnc5h4sev9s2a0ao33kir9mv97ad7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
