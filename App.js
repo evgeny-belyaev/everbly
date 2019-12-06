@@ -9,8 +9,21 @@ import { AppNavigator } from './app/routes';
 const AppContainer = createAppContainer(AppNavigator);
 
 class App extends Component<{}, {}> {
-    componentDidMount = () => {
-        firebase.messaging().subscribeToTopic('announcement');
+    componentDidMount = async () => {
+        /*
+
+        {
+            "to": "/topics/test1",
+            
+            "notification": {
+                "title": "Еще одно охуенное приложение!!!",
+                "body": "Реклама!"
+            }
+        }   
+
+        */
+
+        firebase.messaging().subscribeToTopic('test1');
     }
 
     render() {
