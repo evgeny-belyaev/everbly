@@ -1,17 +1,14 @@
 // @flow
 
 import React from 'react';
-import { SafeAreaView, StatusBar, Text } from 'react-native';
+import { AppNavigator } from './app/routes';
+// eslint-disable-next-line import/named
+import { createAppContainer } from 'react-navigation';
+
+const AppContainer = createAppContainer(AppNavigator);
 
 const App: () => React$Node = () => {
-    return (
-        <>
-            <StatusBar barStyle="dark-content" />
-            <SafeAreaView>
-                <Text>Hello world</Text>
-            </SafeAreaView>
-        </>
-    );
+    return (<AppContainer />);
 };
 
 export default App;
