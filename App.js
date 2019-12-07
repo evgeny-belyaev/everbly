@@ -4,9 +4,20 @@ import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
 // eslint-disable-next-line import/named
 import { createAppContainer } from 'react-navigation';
+import { Provider } from 'react-redux';
+import { compose, createStore } from 'redux';
+import rootReducer from './app/reducer';
 import { AppNavigator } from './app/routes';
 
+
 const AppContainer = createAppContainer(AppNavigator);
+
+
+const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+const store = createStore(
+    rootReducer,
+    {},
+    reduxDevTools ? compose(reduxDevTools) : compose());
 
 class App extends Component<{}, {}> {
     componentDidMount = async () => {
@@ -27,7 +38,11 @@ class App extends Component<{}, {}> {
     }
 
     render() {
-        return (<AppContainer />);
+        return (
+            <Provider store={store}>
+                <AppContainer />
+            </Provider>
+        );
     }
 }
 

@@ -1,31 +1,24 @@
 // @flow
 
 import React, { Component } from 'react';
+import firebase from 'react-native-firebase';
 import { WebView } from 'react-native-webview';
 import { DrawerActions } from 'react-navigation-drawer';
+import { connect } from 'react-redux';
+import { setCurrentUri } from '../components/currentUri/actions';
 import { Hamburger } from '../components/hamburger';
-import firebase from 'react-native-firebase';
 
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 import type { NavigationScreenProp } from 'react-navigation';
+import type { Dispatch } from 'redux';
 
 type Props = {
-    navigation: NavigationScreenProp<{}>
-};
-
-type State = {
+    navigation: NavigationScreenProp<{}>,
+    setCurrentUri: (uri: string) => void,
     uri: string
 };
 
-export class HomeScreen extends Component<Props, State> {
-    state = {
-        uri: ''
-    }
-
-    constructor(props: Props) {
-        super(props);
-    }
-
+class HomeScreenComponent extends Component<Props, {}> {
     static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp }) => ({
         headerTintColor: '#f2b705',
         headerStyle: {
@@ -52,9 +45,7 @@ export class HomeScreen extends Component<Props, State> {
         if (notificationOpen) {
             this.onNotificationOpen(notificationOpen);
         } else {
-            this.setState({
-                uri: 'https://everbly.com'
-            });
+            this.props.setCurrentUri('https://everbly.com');
         }
     }
 
@@ -68,7 +59,7 @@ export class HomeScreen extends Component<Props, State> {
 
         console.log(notification);
 
-        this.setState({ uri: data.uri });
+        this.props.setCurrentUri(data.uri);
     }
 
     componentWillUnmount() {
@@ -76,11 +67,22 @@ export class HomeScreen extends Component<Props, State> {
     }
 
     render() {
+        console.log('render');
+
         return (
             <>
-                <WebView source={{ uri: this.state.uri }} />
+                <WebView source={{ uri: this.props.uri }} />
             </>
         );
     }
 }
+const mapStateToProps = (state: any) => ({
+    uri: state.currentUri.uri
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    setCurrentUri: (uri: string) => dispatch(setCurrentUri(uri))
+});
+
+export const HomeScreen = connect(mapStateToProps, mapDispatchToProps)(HomeScreenComponent);
 
