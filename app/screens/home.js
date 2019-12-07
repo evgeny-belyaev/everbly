@@ -38,8 +38,6 @@ class HomeScreenComponent extends Component<Props, {}> {
     });
 
     componentDidMount = async () => {
-        firebase.notifications().onNotification(this.onNotification);
-
         const notificationOpen = await firebase.notifications().getInitialNotification();
 
         if (notificationOpen) {
