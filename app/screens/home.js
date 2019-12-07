@@ -4,14 +4,28 @@ import React, { Component } from 'react';
 import { WebView } from 'react-native-webview';
 import { DrawerActions } from 'react-navigation-drawer';
 import { Hamburger } from '../components/hamburger';
+import firebase from 'react-native-firebase';
 
+import type { Notification, NotificationOpen } from 'react-native-firebase';
 import type { NavigationScreenProp } from 'react-navigation';
 
 type Props = {
     navigation: NavigationScreenProp<{}>
 };
 
-export class HomeScreen extends Component<Props, {}> {
+type State = {
+    uri: string
+};
+
+export class HomeScreen extends Component<Props, State> {
+    state = {
+        uri: ''
+    }
+
+    constructor(props: Props) {
+        super(props);
+    }
+
     static navigationOptions = ({ navigation }: { navigation: NavigationScreenProp }) => ({
         headerTintColor: '#f2b705',
         headerStyle: {
@@ -30,13 +44,41 @@ export class HomeScreen extends Component<Props, {}> {
         )
     });
 
+    componentDidMount = async () => {
+        firebase.notifications().onNotification(this.onNotification);
+
+        const notificationOpen = await firebase.notifications().getInitialNotification();
+
+        if (notificationOpen) {
+            this.onNotificationOpen(notificationOpen);
+        } else {
+            this.setState({
+                uri: 'https://everbly.com'
+            });
+        }
+    }
+
+    onNotificationOpen = (notificationOpen: NotificationOpen) => {
+        const { notification } = notificationOpen;
+        this.onNotification(notification);
+    }
+
+    onNotification = (notification: Notification) => {
+        const { data } = notification;
+
+        console.log(notification);
+
+        this.setState({ uri: data.uri });
+    }
+
+    componentWillUnmount() {
+        firebase.notifications().onNotification(() => { });
+    }
+
     render() {
         return (
             <>
-                <WebView
-                    source={{ uri: 'https://everbly.com' }}
-                />
-
+                <WebView source={{ uri: this.state.uri }} />
             </>
         );
     }

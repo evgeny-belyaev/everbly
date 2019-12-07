@@ -9,9 +9,9 @@ type Props = {
 
 const Style = {
     icon: {
-        fontSize: 40,
+        fontSize: 30,
         fontWeight: '600',
-        color: '#f2b705',
+        color: '#fff',
         marginLeft: 15,
     }
 };
