@@ -23,10 +23,6 @@ class App extends Component<{}, {}> {
 
     onApplicationStateChange = (applicationState: string) => {
         console.log(applicationState);
-
-        if (applicationState === 'active') {
-            store.dispatch({ type: 'APP_IS_ACTIVE', payload: {} });
-        }
     }
 
     componentDidMount = async () => {

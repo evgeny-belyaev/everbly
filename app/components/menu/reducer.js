@@ -6,6 +6,7 @@ import { saveMenu } from './actions';
 import type { MenuItem } from './selectors';
 
 type CurrentUriState = {
+    ts: number,
     items: MenuItem[]
 };
 
@@ -18,7 +19,10 @@ export default (state: CurrentUriState = defaultState, action: Action): CurrentU
         case saveMenu.getType(): {
             const { items } = action.payload;
 
-            return { items };
+            return {
+                ts: new Date().getTime(),
+                items
+            };
         }
         default:
             return state;

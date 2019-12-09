@@ -9,6 +9,7 @@ import { setCurrentUri } from '../components/currentUri/actions';
 import { Hamburger } from '../components/hamburger';
 import { loadInitializationData } from '../api';
 import { saveMenu } from '../components/menu/actions';
+import { getMenuTs } from '../components/menu/selectors';
 
 import type { MenuItem } from '../components/menu/selectors';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
@@ -19,7 +20,8 @@ type Props = {
     navigation: NavigationScreenProp<{}>,
     setCurrentUri: (uri: string) => void,
     uri: string,
-    saveMenu: (items: MenuItem[]) => void
+    saveMenu: (items: MenuItem[]) => void,
+    menuTs: number
 };
 
 class HomeScreenComponent extends Component<Props, {}> {
@@ -44,7 +46,7 @@ class HomeScreenComponent extends Component<Props, {}> {
     componentDidMount = async () => {
         const initializationData = await loadInitializationData();
 
-        this.props.saveMenu(initializationData.menu);
+        // this.props.saveMenu(initializationData.menu);
 
         const notificationOpen = await firebase.notifications().getInitialNotification();
 
@@ -52,6 +54,16 @@ class HomeScreenComponent extends Component<Props, {}> {
             this.onNotificationOpen(notificationOpen);
         } else {
             this.props.setCurrentUri(initializationData.mainPageUrl);
+        }
+    }
+
+    componentDidUpdate = async () => {
+        const reloadMenu = (new Date().getTime() - (0 + this.props.menuTs)) > 10000;
+
+        if (reloadMenu) {
+            const initializationData = await loadInitializationData();
+
+            this.props.saveMenu(initializationData.menu);
         }
     }
 
@@ -80,8 +92,10 @@ class HomeScreenComponent extends Component<Props, {}> {
         );
     }
 }
+
 const mapStateToProps = (state: any) => ({
-    uri: state.currentUri.uri
+    uri: state.currentUri.uri,
+    menuTs: getMenuTs(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
