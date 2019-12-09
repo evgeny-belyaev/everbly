@@ -6,6 +6,7 @@ import { HomeScreen } from './screens/home';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { Drawer } from './screens/drawer';
 import { Dimensions } from 'react-native';
+import { About } from './screens/about';
 
 const DrawerNavigator = createDrawerNavigator(
     {
@@ -23,7 +24,8 @@ export const AppNavigator = createStackNavigator(
     {
         DrawerStack: {
             screen: DrawerNavigator
-        }
+        },
+        About: { screen: createStackNavigator({ About: { screen: About } }) }
     },
     {
         mode: 'modal',

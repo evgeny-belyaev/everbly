@@ -51,6 +51,11 @@ class DrawerComponent extends Component<Props, {}> {
         this.props.navigation.dispatch(DrawerActions.toggleDrawer());
     };
 
+    openAbout = () => {
+        this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+        this.props.navigation.navigate('About');
+    }
+
     renderItems = (): React$Node => {
         return this.props.menu.map((item: MenuItem) => (
             <Item open={this.openQuiz} title={item.title} url={item.url} key={item.url}></Item>
@@ -66,7 +71,7 @@ class DrawerComponent extends Component<Props, {}> {
                     </View>
                 </ScrollView>
 
-                <Item open={() => this.openQuiz(this.props.aboutUri)} title='О приложении'></Item>
+                <Item open={this.openAbout} title='О приложении'></Item>
             </SafeAreaView>
         );
     }
