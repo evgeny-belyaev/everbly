@@ -7,7 +7,10 @@ import { DrawerActions } from 'react-navigation-drawer';
 import { connect } from 'react-redux';
 import { setCurrentUri } from '../components/currentUri/actions';
 import { Hamburger } from '../components/hamburger';
+import { loadInitializationData } from '../api';
+import { saveMenu } from '../components/menu/actions';
 
+import type { MenuItem } from '../components/menu/selectors';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch } from 'redux';
@@ -15,7 +18,8 @@ import type { Dispatch } from 'redux';
 type Props = {
     navigation: NavigationScreenProp<{}>,
     setCurrentUri: (uri: string) => void,
-    uri: string
+    uri: string,
+    saveMenu: (items: MenuItem[]) => void
 };
 
 class HomeScreenComponent extends Component<Props, {}> {
@@ -38,12 +42,16 @@ class HomeScreenComponent extends Component<Props, {}> {
     });
 
     componentDidMount = async () => {
+        const initializationData = await loadInitializationData();
+
+        this.props.saveMenu(initializationData.menu);
+
         const notificationOpen = await firebase.notifications().getInitialNotification();
 
         if (notificationOpen) {
             this.onNotificationOpen(notificationOpen);
         } else {
-            this.props.setCurrentUri('https://everbly.com');
+            this.props.setCurrentUri(initializationData.mainPageUrl);
         }
     }
 
@@ -65,8 +73,6 @@ class HomeScreenComponent extends Component<Props, {}> {
     }
 
     render() {
-        console.log('render');
-
         return (
             <>
                 <WebView source={{ uri: this.props.uri }} />
@@ -79,7 +85,8 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    setCurrentUri: (uri: string) => dispatch(setCurrentUri(uri))
+    setCurrentUri: (uri: string) => dispatch(setCurrentUri(uri)),
+    saveMenu: (items: MenuItem[]) => dispatch(saveMenu(items))
 });
 
 export const HomeScreen = connect(mapStateToProps, mapDispatchToProps)(HomeScreenComponent);

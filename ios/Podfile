@@ -34,6 +34,8 @@ target 'everbly' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'FirebaseMessaging', '4.1.2'
+  
   target 'everblyTests' do
     inherit! :search_paths
     # Pods for testing
