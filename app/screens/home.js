@@ -99,8 +99,7 @@ class HomeScreenComponent extends Component<Props, {}> {
     }
 
     render() {
-        return (
-
+        return this.props.uri ? (
             <WebView
                 ref={this.WEBVIEW_REF}
                 startInLoadingState={false}
@@ -109,7 +108,8 @@ class HomeScreenComponent extends Component<Props, {}> {
                     this.canGoBack = navState.canGoBack;
                 }}
                 source={{ uri: this.props.uri }} />
-        );
+        ) : null;
+
     }
 }
 
