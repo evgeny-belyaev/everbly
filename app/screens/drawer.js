@@ -1,27 +1,34 @@
 // @flow
 import React, { Component } from 'react';
-import { SafeAreaView, Text, TouchableHighlight } from 'react-native';
+import { SafeAreaView, Text, TouchableHighlight, View, ScrollView } from 'react-native';
 import { DrawerActions } from 'react-navigation-drawer';
 import { connect } from 'react-redux';
 import { setCurrentUri } from '../components/currentUri/actions';
+import { getMenuItems } from '../components/menu/selectors';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch } from 'redux';
+import type { MenuItem } from '../components/menu/selectors';
 
 const Style = {
     container: { flex: 1 },
-    item: { margin: 15 },
-    itemText: { fontSize: 16, fontWeight: '400', }
+    item: { margin: 5, marginLeft: 30, borderBottomWidth: 1, borderBottomColor: '#038b8b', padding: 10 },
+    itemText: { fontSize: 20, fontWeight: '400', },
+    scroll: {
+        flexGrow: 1,
+        flexDirection: 'column'
+    },
+    contentContainerStyle: { justifyContent: 'space-between' }
 };
 
 type PropsItem = {
     title: string,
-    uri: string,
-    open: (string) => void
+    url?: string,
+    open: (url?: string) => void
 };
 
 const Item = (props: PropsItem): React$Node => {
-    const onPress = () => props.open(props.uri);
+    const onPress = () => props.open(props.url);
 
     return (
         <TouchableHighlight style={Style.item} onPress={onPress} underlayColor='transparent'>
@@ -32,35 +39,51 @@ const Item = (props: PropsItem): React$Node => {
 
 type Props = {
     navigation: NavigationScreenProp<{}>,
-    setCurrentUri: (uri: string) => void
+    setCurrentUri: (uri: string) => void,
+    menu: MenuItem[]
 };
 
-
 class DrawerComponent extends Component<Props, {}> {
-    render() {
-        const { navigation } = this.props;
-
-        const openQuiz = (uri: string) => {
+    openQuiz = (uri?: string) => {
+        if (uri) {
             this.props.setCurrentUri(uri);
-            navigation.dispatch(DrawerActions.toggleDrawer());
-        };
+            this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+        }
+    };
 
+    openAbout = () => {
+        this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+        this.props.navigation.navigate('About');
+    }
+
+    renderItems = (): React$Node => {
+        return this.props.menu.map((item: MenuItem) => (
+            <Item open={this.openQuiz} title={item.title} url={item.url} key={item.url}></Item>
+        ));
+    }
+
+    render() {
         return (
             <SafeAreaView style={Style.container} >
-                <Item open={openQuiz} title='Насколько вы образованы?' uri='https://everbly.com/ru/%D1%8D%D1%80%D1%83%D0%B4%D0%B8%D1%82'></Item>
-                <Item open={openQuiz} title='Хорошо ли вы знаете Россию?' uri='https://everbly.com/ru/%D1%85%D0%BE%D1%80%D0%BE%D1%88%D0%BE-%D0%BB%D0%B8-%D0%B2%D1%8B-%D0%B7%D0%BD%D0%B0%D0%B5%D1%82%D0%B5-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D1%8E'></Item>
-                <Item open={openQuiz} title='Что вы знаете о футболе?' uri='https://everbly.com/ru/soccer'></Item>
-                <Item open={openQuiz} title='Хорошо ли вы знаете Россию?' uri='https://everbly.com/ru/%D1%85%D0%BE%D1%80%D0%BE%D1%88%D0%BE-%D0%BB%D0%B8-%D0%B2%D1%8B-%D0%B7%D0%BD%D0%B0%D0%B5%D1%82%D0%B5-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D1%8E'></Item>
-                <Item open={openQuiz} title='Что вы знаете о футболе?' uri='https://everbly.com/ru/soccer'></Item>
+                <ScrollView style={Style.scroll} bounces={false} contentContainerStyle={Style.contentContainerStyle}>
+                    <View>
+                        {this.renderItems()}
+                    </View>
+                </ScrollView>
+
+                <Item open={this.openAbout} title='О приложении'></Item>
             </SafeAreaView>
         );
     }
 }
 
+const mapStateToProps = (state: any) => ({
+    menu: getMenuItems(state)
+});
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     setCurrentUri: (uri: string) => dispatch(setCurrentUri(uri))
 });
 
-export const Drawer = connect(null, mapDispatchToProps)(DrawerComponent);
+export const Drawer = connect(mapStateToProps, mapDispatchToProps)(DrawerComponent);
 

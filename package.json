@@ -6,8 +6,11 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start --reset-cache",
-    "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest --silent",
+    "testdebug": "jest",
+    "testcoverage": "jest --coverage",
+    "testwatch": "npm test -- --watch --maxWorkers 4"
   },
   "dependencies": {
     "@react-navigation/core": "^3.5.1",
@@ -24,7 +27,10 @@
     "react-navigation-stack": "^1.10.3",
     "react-redux": "^7.1.3",
     "redux": "^4.0.4",
-    "redux-act": "^1.7.7"
+    "redux-act": "^1.7.7",
+    "axios": "0.19.0",
+    "reselect": "4.0.0",
+    "redux-saga": "^0.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
@@ -42,7 +48,8 @@
     "flow-bin": "^0.98.0",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.57.0",
-    "react-test-renderer": "16.9.0"
+    "react-test-renderer": "16.9.0",
+    "redux-saga-test-plan": "^3.7.0"
   },
   "jest": {
     "preset": "react-native"
