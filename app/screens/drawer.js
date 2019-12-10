@@ -1,15 +1,13 @@
 // @flow
 import React, { Component } from 'react';
-import { SafeAreaView, Text, TouchableHighlight, View } from 'react-native';
+import { SafeAreaView, Text, TouchableHighlight, View, ScrollView } from 'react-native';
 import { DrawerActions } from 'react-navigation-drawer';
 import { connect } from 'react-redux';
 import { setCurrentUri } from '../components/currentUri/actions';
 import { getMenuItems } from '../components/menu/selectors';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch } from 'redux';
-
 import type { MenuItem } from '../components/menu/selectors';
 
 const Style = {
@@ -19,14 +17,14 @@ const Style = {
     scroll: {
         flexGrow: 1,
         flexDirection: 'column'
-    }
+    },
+    contentContainerStyle: { justifyContent: 'space-between' }
 };
 
 type PropsItem = {
     title: string,
-    url: string,
-    open: (string) => void,
-    aboutUri: string
+    url?: string,
+    open: (url?: string) => void
 };
 
 const Item = (props: PropsItem): React$Node => {
@@ -46,9 +44,11 @@ type Props = {
 };
 
 class DrawerComponent extends Component<Props, {}> {
-    openQuiz = (uri: string) => {
-        this.props.setCurrentUri(uri);
-        this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+    openQuiz = (uri?: string) => {
+        if (uri) {
+            this.props.setCurrentUri(uri);
+            this.props.navigation.dispatch(DrawerActions.toggleDrawer());
+        }
     };
 
     openAbout = () => {
@@ -65,7 +65,7 @@ class DrawerComponent extends Component<Props, {}> {
     render() {
         return (
             <SafeAreaView style={Style.container} >
-                <ScrollView style={Style.scroll} contentContainerStyle={{ justifyContent: 'space-between' }}>
+                <ScrollView style={Style.scroll} bounces={false} contentContainerStyle={Style.contentContainerStyle}>
                     <View>
                         {this.renderItems()}
                     </View>
@@ -78,8 +78,7 @@ class DrawerComponent extends Component<Props, {}> {
 }
 
 const mapStateToProps = (state: any) => ({
-    menu: getMenuItems(state),
-    aboutUrl: () => ('http://ya.ru')
+    menu: getMenuItems(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

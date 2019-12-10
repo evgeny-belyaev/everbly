@@ -5,23 +5,23 @@ import firebase from 'react-native-firebase';
 import { WebView } from 'react-native-webview';
 import { DrawerActions } from 'react-navigation-drawer';
 import { connect } from 'react-redux';
+import { loadConfig } from '../components/config/actions';
+import { getConfig } from '../components/config/selectors';
 import { setCurrentUri } from '../components/currentUri/actions';
 import { Hamburger } from '../components/hamburger';
-import { loadInitializationData } from '../api';
-import { saveMenu } from '../components/menu/actions';
-import { getMenuTs } from '../components/menu/selectors';
 
-import type { MenuItem } from '../components/menu/selectors';
 import type { Notification, NotificationOpen } from 'react-native-firebase';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch } from 'redux';
+import type { ConfigState } from '../components/config/selectors';
 
 type Props = {
     navigation: NavigationScreenProp<{}>,
     setCurrentUri: (uri: string) => void,
     uri: string,
-    saveMenu: (items: MenuItem[]) => void,
-    menuTs: number
+    loadConfig: () => void,
+    menuTs: number,
+    config: ConfigState
 };
 
 class HomeScreenComponent extends Component<Props, {}> {
@@ -44,26 +44,16 @@ class HomeScreenComponent extends Component<Props, {}> {
     });
 
     componentDidMount = async () => {
-        const initializationData = await loadInitializationData();
-
-        // this.props.saveMenu(initializationData.menu);
-
         const notificationOpen = await firebase.notifications().getInitialNotification();
 
         if (notificationOpen) {
             this.onNotificationOpen(notificationOpen);
-        } else {
-            this.props.setCurrentUri(initializationData.mainPageUrl);
         }
     }
 
-    componentDidUpdate = async () => {
-        const reloadMenu = (new Date().getTime() - (0 + this.props.menuTs)) > 10000;
-
-        if (reloadMenu) {
-            const initializationData = await loadInitializationData();
-
-            this.props.saveMenu(initializationData.menu);
+    componentDidUpdate = (prevProps: Props) => {
+        if (this.props.config.pages.main != prevProps.config.pages.main) {
+            this.props.setCurrentUri(this.props.config.pages.main);
         }
     }
 
@@ -86,21 +76,22 @@ class HomeScreenComponent extends Component<Props, {}> {
 
     render() {
         return (
-            <>
-                <WebView source={{ uri: this.props.uri }} />
-            </>
+
+            <WebView
+                startInLoadingState={false}
+                source={{ uri: this.props.uri }} />
         );
     }
 }
 
 const mapStateToProps = (state: any) => ({
     uri: state.currentUri.uri,
-    menuTs: getMenuTs(state)
+    config: getConfig(state)
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     setCurrentUri: (uri: string) => dispatch(setCurrentUri(uri)),
-    saveMenu: (items: MenuItem[]) => dispatch(saveMenu(items))
+    loadConfig: () => dispatch(loadConfig())
 });
 
 export const HomeScreen = connect(mapStateToProps, mapDispatchToProps)(HomeScreenComponent);

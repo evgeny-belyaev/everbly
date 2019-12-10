@@ -17,5 +17,4 @@ export const defaultMenu: MenuItem[] = [
 ];
 
 export const getMenuItems = (state: any) => state.menu.items && state.menu.items.length ? state.menu.items : defaultMenu;
-export const getMenuTs = (state: any) => state.menu.ts ? state.menu.ts : 0;
 
