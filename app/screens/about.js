@@ -3,8 +3,8 @@
 import React, { Component } from 'react';
 import { WebView } from 'react-native-webview';
 import { connect } from 'react-redux';
-import { Back } from '../components/back';
 import { getConfig } from '../components/config/selectors';
+import { HeaderBackButton } from 'react-navigation';
 
 import type { NavigationScreenProp } from 'react-navigation';
 
@@ -27,7 +27,7 @@ class AboutComponent extends Component<Props, {}> {
             borderBottomWidth: 0
         },
         headerLeft: () => (
-            <Back onPress={() => { navigation.pop(); }} />
+            <HeaderBackButton onPress={() => { navigation.pop(); }} tintColor='white' />
         )
     });
 
