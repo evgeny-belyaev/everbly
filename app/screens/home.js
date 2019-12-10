@@ -5,6 +5,7 @@ import firebase from 'react-native-firebase';
 import { WebView } from 'react-native-webview';
 import { DrawerActions } from 'react-navigation-drawer';
 import { connect } from 'react-redux';
+import { BackHandler } from 'react-native';
 import { loadConfig } from '../components/config/actions';
 import { getConfig } from '../components/config/selectors';
 import { setCurrentUri } from '../components/currentUri/actions';
@@ -43,7 +44,14 @@ class HomeScreenComponent extends Component<Props, {}> {
         )
     });
 
+    constructor(props: Props) {
+        super(props);
+        this.WEBVIEW_REF = React.createRef();
+    }
+
     componentDidMount = async () => {
+        BackHandler.addEventListener('hardwareBackPress', this.backHandler);
+
         const notificationOpen = await firebase.notifications().getInitialNotification();
 
         if (notificationOpen) {
@@ -54,6 +62,15 @@ class HomeScreenComponent extends Component<Props, {}> {
     componentDidUpdate = (prevProps: Props) => {
         if (this.props.config.pages.main != prevProps.config.pages.main) {
             this.props.setCurrentUri(this.props.config.pages.main);
+        }
+    }
+
+    backHandler = () => {
+        if (this.canGoBack) {
+            this.WEBVIEW_REF.current.goBack();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -71,14 +88,26 @@ class HomeScreenComponent extends Component<Props, {}> {
     }
 
     componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.backHandler);
         firebase.notifications().onNotification(() => { });
+    }
+
+    onNavigationStateChange(navState) {
+        this.setState({
+            canGoBack: navState.canGoBack
+        });
     }
 
     render() {
         return (
 
             <WebView
+                ref={this.WEBVIEW_REF}
                 startInLoadingState={false}
+                onNavigationStateChange={navState => {
+                    // Keep track of going back navigation within component
+                    this.canGoBack = navState.canGoBack;
+                }}
                 source={{ uri: this.props.uri }} />
         );
     }

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { WebView } from 'react-native-webview';
 import { connect } from 'react-redux';
 import { getConfig } from '../components/config/selectors';
-import { HeaderBackButton } from 'react-navigation';
+import { HeaderBackButton } from 'react-navigation-stack';
 
 import type { NavigationScreenProp } from 'react-navigation';
 

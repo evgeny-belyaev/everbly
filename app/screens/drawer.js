@@ -11,9 +11,9 @@ import type { Dispatch } from 'redux';
 import type { MenuItem } from '../components/menu/selectors';
 
 const Style = {
-    container: { flex: 1 },
-    item: { margin: 5, marginLeft: 30, borderBottomWidth: 1, borderBottomColor: '#038b8b', padding: 10 },
-    itemText: { fontSize: 20, fontWeight: '400', },
+    container: { flex: 1, paddingBottom: 10, },
+    item: { margin: 5, marginLeft: 30, borderBottomWidth: 1, borderBottomColor: '#038b8b', padding: 5, marginRight: 15, },
+    itemText: { fontSize: 16, fontWeight: '400', },
     scroll: {
         flexGrow: 1,
         flexDirection: 'column'
