@@ -12,6 +12,7 @@ import { AppNavigator } from './app/routes';
 import createSagaMiddleware from 'redux-saga';
 import { rootSaga } from './app/saga';
 import { loadConfig } from './app/components/config/actions';
+import AppMetrica from 'react-native-appmetrica';
 
 const AppContainer = createAppContainer(AppNavigator);
 const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
@@ -26,6 +27,9 @@ class App extends Component<{}, {}> {
         super(props);
 
         sagaMiddleware.run(rootSaga);
+
+        AppMetrica.activateWithApiKey('f855a6b1-f732-4811-8ea7-248b1eabf3d1');
+        AppMetrica.reportEvent('App started');
     }
 
     componentDidMount = async () => {
