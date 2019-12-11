@@ -11,7 +11,7 @@ import type { Dispatch } from 'redux';
 import type { MenuItem } from '../components/menu/selectors';
 
 const Style = {
-    container: { flex: 1, paddingBottom: 10, },
+    container: { flex: 1, paddingBottom: 10, paddingTop: 20 },
     item: { margin: 5, marginLeft: 30, borderBottomWidth: 1, borderBottomColor: '#038b8b', padding: 5, marginRight: 15, },
     itemText: { fontSize: 16, fontWeight: '400', },
     scroll: {

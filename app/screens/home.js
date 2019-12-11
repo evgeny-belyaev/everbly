@@ -15,6 +15,7 @@ import type { Notification, NotificationOpen } from 'react-native-firebase';
 import type { NavigationScreenProp } from 'react-navigation';
 import type { Dispatch } from 'redux';
 import type { ConfigState } from '../components/config/selectors';
+import type { WebViewNavigation } from 'react-native-webview';
 
 type Props = {
     navigation: NavigationScreenProp<{}>,
@@ -44,6 +45,10 @@ class HomeScreenComponent extends Component<Props, {}> {
         )
     });
 
+    canGoBack: boolean;
+    WEBVIEW_REF: any;
+    lastUrl: string;
+
     constructor(props: Props) {
         super(props);
         this.WEBVIEW_REF = React.createRef();
@@ -65,7 +70,7 @@ class HomeScreenComponent extends Component<Props, {}> {
         }
     }
 
-    backHandler = () => {
+    backHandler = (): boolean => {
         if (this.canGoBack) {
             this.WEBVIEW_REF.current.goBack();
             return true;
@@ -92,20 +97,16 @@ class HomeScreenComponent extends Component<Props, {}> {
         firebase.notifications().onNotification(() => { });
     }
 
-    onNavigationStateChange(navState) {
-        this.setState({
-            canGoBack: navState.canGoBack
-        });
-    }
-
     render() {
         return this.props.uri ? (
             <WebView
                 ref={this.WEBVIEW_REF}
                 startInLoadingState={false}
-                onNavigationStateChange={navState => {
+                onNavigationStateChange={(navState: WebViewNavigation) => {
                     // Keep track of going back navigation within component
                     this.canGoBack = navState.canGoBack;
+                    this.props.setCurrentUri(navState.url);
+
                 }}
                 source={{ uri: this.props.uri }} />
         ) : null;
