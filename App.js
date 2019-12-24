@@ -36,7 +36,7 @@ class App extends Component<{}, {}> {
         store.dispatch(loadConfig());
 
         AppState.addEventListener('change', this.onApplicationStateChange);
-        firebase.messaging().subscribeToTopic('notifications-v2');
+        firebase.messaging().subscribeToTopic('notifications-v1');
     }
 
     componentWillUnmount = () => {
