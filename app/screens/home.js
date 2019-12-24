@@ -65,7 +65,7 @@ class HomeScreenComponent extends Component<Props, {}> {
     }
 
     componentDidUpdate = (prevProps: Props) => {
-        if (this.props.config.pages.main != prevProps.config.pages.main) {
+        if (this.props.config.pages.main != prevProps.config.pages.main && !this.props.uri) {
             this.props.setCurrentUri(this.props.config.pages.main);
         }
     }
@@ -105,8 +105,6 @@ class HomeScreenComponent extends Component<Props, {}> {
                 onNavigationStateChange={(navState: WebViewNavigation) => {
                     // Keep track of going back navigation within component
                     this.canGoBack = navState.canGoBack;
-                    this.props.setCurrentUri(navState.url);
-
                 }}
                 source={{ uri: this.props.uri }} />
         ) : null;
